@@ -1,10 +1,8 @@
 package io.travis.thegreatcolormachine
 
 
-import android.graphics.Color
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.PorterDuff
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -36,11 +34,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val menuItem = menu.add("Next Image")
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-        menuItem.setIcon(R.drawable.ic_baseline_add_a_photo_24)
-        menuItem.icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+//        val menuItem = menu.add("Next Image")
+//        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+//        menuItem.setIcon(R.drawable.ic_baseline_add_a_photo_24)
+//        menuItem.icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+
+        menuInflater.inflate(R.menu.options_menu, menu)
+        val nextImageDrawable: Drawable = menu.findItem(R.id.nextImage).icon
+        nextImageDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+
+        menu.findItem(R.id.red).isChecked = red
+        menu.findItem(R.id.green).isChecked = green
+        menu.findItem(R.id.blue).isChecked = blue
+
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        switch(item.itemId) {
+            case R.id.nextImage {
+                imageIndex++
+                if (imageIndex >= imageResIds.size)
+                    imageIndex = 0
+                loadImage()
+                break;
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun updateSaturation() {
