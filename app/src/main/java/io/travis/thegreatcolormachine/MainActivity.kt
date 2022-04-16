@@ -34,10 +34,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        val menuItem = menu.add("Next Image")
-//        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-//        menuItem.setIcon(R.drawable.ic_baseline_add_a_photo_24)
-//        menuItem.icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
 
         menuInflater.inflate(R.menu.options_menu, menu)
         val nextImageDrawable: Drawable = menu.findItem(R.id.nextImage).icon
@@ -47,22 +43,53 @@ class MainActivity : AppCompatActivity() {
         menu.findItem(R.id.green).isChecked = green
         menu.findItem(R.id.blue).isChecked = blue
 
+        menu.setGroupVisible(R.id.colorGroup, color)
+
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        switch(item.itemId) {
-            case R.id.nextImage {
+
+        when(item.itemId) {
+            R.id.nextImage -> {
                 imageIndex++
                 if (imageIndex >= imageResIds.size)
                     imageIndex = 0
                 loadImage()
-                break;
+            }
+            R.id.color -> {
+                color = !color
+                updateSaturation()
+                invalidateOptionsMenu()
+            }
+            R.id.red -> {
+                red = !red
+                updateColors()
+                item.isChecked = red
+            }
+            R.id.green -> {
+                green = !green
+                updateColors()
+                item.isChecked = green
+            }
+            R.id.blue -> {
+                blue = !blue
+                updateColors()
+                item.isChecked = blue
+            }
+            R.id.reset -> {
+                imageView.clearColorFilter()
+                red = true
+                green = true
+                blue = true
+                color = true
+                invalidateOptionsMenu()
             }
         }
 
         return super.onOptionsItemSelected(item)
     }
+
 
     private fun updateSaturation() {
         val colorMatrix = ColorMatrix()
@@ -81,10 +108,26 @@ class MainActivity : AppCompatActivity() {
     private fun updateColors() {
         val colorMatrix = ColorMatrix()
         val matrix = floatArrayOf(
-            1f, 0f, 0f, 0f,
-            0f, 1f, 0f, 0f,
-            0f, 0f, 1f, 0f,
-            0f, 0f, 0f, 1f
+            1f,
+            0f,
+            0f,
+            0f,
+            0f,
+            0f,
+            1f,
+            0f,
+            0f,
+            0f,
+            0f,
+            0f,
+            1f,
+            0f,
+            0f,
+            0f,
+            0f,
+            0f,
+            1f,
+            0f
         )
         if (!red) matrix[0] = 0f
         if (!green) matrix[6] = 0f
